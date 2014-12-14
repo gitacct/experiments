@@ -1,0 +1,35 @@
+//
+//  main.cpp
+//  using_base_constructor
+//
+//  Created by GUEST on 10/18/14.
+//  Copyright (c) 2014 GUEST. All rights reserved.
+//
+#include <iostream>
+
+class OS{
+protected:
+    double version{0};
+public:
+    OS(const double input):version(input){}
+    virtual ~OS(){}
+    virtual double get() const=0;
+    virtual void set(const double)=0;
+};
+struct MacOS:public OS{
+    using OS::OS;    // C++11 feature
+    double get() const{
+        return version;
+    }
+    void set(const double input){
+        version=input;
+    }
+};
+int main(void) {
+    MacOS yosemite(10.10);
+    OS* os_ptr=&yosemite;
+    std::cout << "New Release=> " << os_ptr->get() << std::endl;
+    os_ptr->set(10.20);
+    std::cout << "Predicted Future Release=> " << os_ptr->get() << std::endl;
+    return 0;
+}
