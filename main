@@ -1,0 +1,33 @@
+//
+//  main.cpp
+//  vector_play
+//
+//  Created by GUEST on 12/31/14.
+//  Copyright (c) 2014 GUEST. All rights reserved.
+//
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include "movie.h"
+#include "family.h"
+
+void insert_title(Movie* cat,const char* movie_title){
+    void (Movie::*push)(const char*)=&Movie::insert;
+    (cat->*push)(movie_title);
+}
+std::vector<std::string> retrieve(Movie* cat){
+    std::vector<std::string> (Movie::*copy)()=&Movie::get_list;
+    return (cat->*copy)();
+}
+int main(void) {
+    Family pixar;
+    std::initializer_list<const char*> pixar_titles={"Toy Story","Cars","The Incredibles","Brave","Monsters, Inc.","A Bug's Life","Luxo Jr.","Partly Cloudy"};
+    std::vector<const char*> pixar_movies{pixar_titles};
+    for(auto& i:pixar_movies)
+        insert_title(&pixar,i);
+    
+    for(auto& a:retrieve(&pixar))
+        std::cout << a << std::endl;
+    return 0;
+}
