@@ -1,0 +1,49 @@
+//
+//  main.cpp
+//  matrix
+//
+//  Created by GUEST on 1/2/15.
+//  Copyright (c) 2015 GUEST. All rights reserved.
+//
+
+#include <iostream>
+#include <thread>
+#include <future>
+#include <mutex>
+#include <vector>
+
+struct Guard_Data {
+    int count{10};
+    std::mutex guard;
+}sentinel;
+void decrement() {
+    std::lock_guard<std::mutex> lock_down(sentinel.guard);
+    --sentinel.count;
+}
+void refill() {
+    sentinel.count=10;
+}
+void conditional_action() {
+    if (sentinel.count==0) {
+        throw ("uh-oh... counter is zero.");
+    } else if (sentinel.count<3) {
+        std::cout << "counter is approaching zero!" << std::endl;
+    } else {
+        std::cout << "counter is good." << std::endl;
+    }
+}
+int main(void) {
+    std::vector<std::thread> thread_launcher;
+    for(int i=0;i<10;++i)
+        thread_launcher.push_back(std::thread([]{decrement();}));
+    for(auto& a:thread_launcher)
+        a.join();
+    try {
+        conditional_action();
+    } catch (const char* error) {
+        std::cout << error << std::endl;
+        std::async(std::launch::async,refill);
+        std::cout << "count is reset." << std::endl;
+    }
+    return 0;
+}
