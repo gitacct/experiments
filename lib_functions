@@ -1,0 +1,46 @@
+//
+//  lib_functions.h
+//  movie_library
+//
+//  Created by GUEST on 1/3/15.
+//  Copyright (c) 2015 GUEST. All rights reserved.
+//
+
+#ifndef movie_library_lib_functions_h
+#define movie_library_lib_functions_h
+
+namespace lib_functions {
+    using catalog_iterator=std::map<const char*,std::vector<const char*>>::iterator;
+    using catalog=std::map<const char*,std::vector<const char*>>;
+
+    std::string validate_input(std::string& input) {
+        std::string updated_title{input};
+        if(std::islower(updated_title[0]))
+            updated_title[0]=std::toupper(updated_title[0]);
+        for (int i=1; i<updated_title.length(); ++i) {
+            if (std::isblank(updated_title[i])) {
+                if (std::islower(updated_title[++i]))
+                    updated_title[i]=std::toupper(updated_title[i]);
+            }
+        }
+        return updated_title;
+    }
+    void look_up(std::string& input,catalog& m_cat) {
+        unsigned short entry_count{0};
+        for(catalog_iterator i=m_cat.begin(); i!=m_cat.end();){
+            for(auto j:i->second){
+                if(j==validate_input(input)){
+                    std::cout << input << " is produced by " << i->first << '.' << std::endl;
+                    ++entry_count;
+                }
+            }
+            ++i;
+            if (i==m_cat.end() && entry_count==0) {
+                std::cout << "Sorry, there is no entry for " << input << '.' << std::endl;
+            }
+        }
+    }
+
+}
+
+#endif

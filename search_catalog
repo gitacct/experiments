@@ -1,0 +1,24 @@
+//
+//  main.cpp
+//  movie_library
+//
+//  Created by GUEST on 1/3/15.
+//  Copyright (c) 2015 GUEST. All rights reserved.
+//
+
+#include <iostream>
+#include <string>
+#include <cctype>
+#include <map>
+#include <vector>
+#include "lib_functions.h"
+extern std::map<const char*,std::vector<const char*>> studio_catalog;
+using namespace lib_functions;
+
+int main(void) {
+    std::cout << "Find out which studio produced (Enter the movie title) " << std::flush;
+    std::string movie_title;
+    std::getline(std::cin,movie_title);
+    look_up(movie_title, studio_catalog);
+    return 0;
+}

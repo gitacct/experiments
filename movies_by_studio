@@ -1,0 +1,19 @@
+//
+//  movies_by_studio.cpp
+//  movie_library
+//
+//  Created by GUEST on 1/3/15.
+//  Copyright (c) 2015 GUEST. All rights reserved.
+//
+
+#include <map>
+#include <vector>
+std::initializer_list<const char*> warner_brothers={"Demolition Man","Ace Ventura: Pet Detective","Maverick","Empire Records","L.A. Confidential"};
+std::initializer_list<const char*> paramount={"Star Trek Generations","Virtuosity","Mission:Impossible","The Ghost and the Darkness","The Saint"};
+std::map<const char*,std::vector<const char*>> create_lib() {
+    std::map<const char*,std::vector<const char*>> studio_movies;
+    studio_movies.insert(std::pair<const char*,std::vector<const char*>>("warner_bros",warner_brothers));
+    studio_movies.insert(std::pair<const char*,std::vector<const char*>>("paramount_pictures",paramount));
+    return studio_movies;
+}
+std::map<const char*,std::vector<const char*>> studio_catalog=create_lib();
