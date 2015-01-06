@@ -1,0 +1,45 @@
+//
+//  cast_data_structures.h
+//  cast_info
+//
+//  Created by GUEST on 1/6/15.
+//  Copyright (c) 2015 GUEST. All rights reserved.
+//
+
+#ifndef cast_info_cast_data_structures_h
+#define cast_info_cast_data_structures_h
+
+struct Cast_Info{
+    std::string birth_date;
+    std::string birth_place;
+    std::string years_active;
+    Cast_Info(const char* bday,const char* bplace,const char* active_years):birth_date(bday),birth_place(bplace),years_active(active_years){}
+    ~Cast_Info(){}
+};
+struct Casts{
+    std::map<std::string,Cast_Info> starring;
+    Casts(){}
+    Casts(const char* star_name,const char* bday,const char* bplace,const char* active_years) {
+        starring.insert(std::pair<std::string,Cast_Info>(star_name,Cast_Info(bday,bplace,active_years)));
+    }
+    Casts(std::map<std::string,Cast_Info>&& casting_list):starring(std::move(casting_list)) {}
+    virtual ~Casts(){}
+};
+struct Actor{
+    const char *name, *birth_date, *birth_place, *years_active;
+    Actor(const char* a,const char* b,const char* c,const char* d):name(a),birth_date(b),birth_place(c),years_active(d) {}
+    ~Actor(){}
+};
+void incl_cast(TV_Series* series_,const char* star_,const char* bday,const char* bplace,const char* active_) {
+    void (TV_Series::*cast_)(const char*,const char*,const char*,const char*)=&TV_Series::cast_member;
+    (series_->*cast_)(star_,bday,bplace,active_);
+}
+void include_in(std::map<std::string,std::unique_ptr<TV_Series>>& tv_map,std::string series_title,Actor&& star_name) {
+    if (!tv_map.find(series_title)->second->find_cast(star_name.name)) {
+        TV_Series* modify_show_info = std::move(tv_map.find(series_title)->second).release();
+        incl_cast(modify_show_info,star_name.name,star_name.birth_date,star_name.birth_place,star_name.years_active);
+        tv_map[series_title]=std::move(std::unique_ptr<TV_Series>(modify_show_info));
+    }
+}
+
+#endif

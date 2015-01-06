@@ -1,0 +1,19 @@
+//
+//  tv_series_data_structures.h
+//  cast_info
+//
+//  Created by GUEST on 1/6/15.
+//  Copyright (c) 2015 GUEST. All rights reserved.
+//
+
+#ifndef cast_info_tv_series_data_structures_h
+#define cast_info_tv_series_data_structures_h
+
+struct TV_Series{
+    virtual ~TV_Series(){}
+    virtual bool find_cast(const char*)=0;
+    virtual void get_cast_info()=0;
+    virtual void cast_member(const char*,const char*,const char*,const char*)=0;
+};
+
+#endif

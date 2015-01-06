@@ -1,0 +1,48 @@
+//
+//  main.cpp
+//  cast_info
+//
+//  all cast information from en.wikipedia.org
+//  Created by GUEST on 1/6/15.
+//  Copyright (c) 2015 GUEST. All rights reserved.
+//
+
+#include <iostream>
+#include <string>
+#include <map>
+#include <memory>
+#include "tv_series_data_structures.h"
+#include "cast_data_structures.h"
+#include "genre_data_structures.h"
+
+
+int main(void) {
+    std::map<std::string,Cast_Info> ps_cast;
+    ps_cast.insert(std::make_pair("Mark Linn-Baker",Cast_Info("June 17, 1954","St. Louis, Missouri","1979-present")));
+    ps_cast.insert(std::make_pair("Bronson Pinchot",Cast_Info("May 20,1959","Manhattan, New York","1983-present")));
+    std::unique_ptr<TV_Series> perfect_strangers(new Sitcom(std::move(ps_cast)));
+    std::map<std::string,Cast_Info> two_bg_cast;
+    two_bg_cast.insert(std::make_pair("Kat Dennings",Cast_Info("June 13, 1986","Bryn Mawr, Pennsylvania","2000-present")));
+    two_bg_cast.insert(std::make_pair("Beth Behrs",Cast_Info("December 26,1985","Lancaster, Pennsylvania","2009-present")));
+    std::unique_ptr<TV_Series> two_bg(new Sitcom(std::move(two_bg_cast)));
+    std::map<std::string,Cast_Info> knightRider;
+    knightRider.insert(std::make_pair("David Hasselhoff",Cast_Info("July 17, 1952","Baltimore, Maryland","1973-present")));
+    knightRider.insert(std::make_pair("William Daniels",Cast_Info("March 31, 1927","Brooklyn, New York","1950-present")));
+    std::unique_ptr<TV_Series> knight_rider(new Sci_Fi(std::move(knightRider)));
+    std::unique_ptr<TV_Series> flash(new Sci_Fi("John Wesley Shipp","January 22, 1955","Norfolk, Virginia","1986-present"));
+    std::map<std::string,std::unique_ptr<TV_Series>> tv_shows;
+    tv_shows.insert(std::pair<std::string,std::unique_ptr<TV_Series>>("Perfect Strangers",std::move(perfect_strangers)));
+    tv_shows.insert(std::pair<std::string,std::unique_ptr<TV_Series>>("2 Broke Girl$",std::move(two_bg)));
+    tv_shows.insert(std::pair<std::string,std::unique_ptr<TV_Series>>("Knight Rider",std::move(knight_rider)));
+    tv_shows.insert(std::make_pair("The Flash",std::move(flash)));
+    
+    Actor patricia_mcpherson{"Patricia McPherson","November 27, 1954","Oak Harbor, Washington","1980-1991"};
+    include_in(tv_shows,"Knight Rider",std::move(patricia_mcpherson));
+    Actor amanda_pays{"Amanda Pays","June 6, 1959","London, England","1984-present"};
+    include_in(tv_shows, "The Flash", std::move(amanda_pays));
+    for(auto& shows:tv_shows){
+        std::cout << shows.first << std::endl;
+        shows.second->get_cast_info();
+    }
+    return 0;
+}

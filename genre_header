@@ -1,0 +1,56 @@
+//
+//  genre_data_structures.h
+//  cast_info
+//
+//  Created by GUEST on 1/6/15.
+//  Copyright (c) 2015 GUEST. All rights reserved.
+//
+
+#ifndef cast_info_genre_data_structures_h
+#define cast_info_genre_data_structures_h
+
+class Sitcom:public TV_Series,private Casts {
+    bool find_cast(const char* name_) override final {
+        std::string star_name = name_;
+        auto search_result=starring.find(star_name);
+        return (search_result!=starring.end())?true:false;
+    }
+    void get_cast_info() override final {
+        for(auto& star_:starring){
+            std::cout << star_.first << std::endl;
+            std::cout << "BIRTH\t" << star_.second.birth_date << '\n' << std::string(5,' ') << '\t' << star_.second.birth_place << std::endl;
+            std::cout << "YEARS ACTIVE\t" << star_.second.years_active << std::endl;
+            }
+    }
+    void cast_member(const char* star_name,const char* bday,const char* bplace,const char* active_years) override final {
+                starring.insert(std::pair<std::string,Cast_Info>(star_name,Cast_Info(bday,bplace,active_years)));
+    }
+public:
+    using Casts::Casts;
+    Sitcom():Casts(){};
+    Sitcom(std::map<std::string,Cast_Info>&& casting_list):Casts(std::move(casting_list)) {}
+    ~Sitcom()=default;
+};
+class Sci_Fi:public TV_Series,private Casts{
+    bool find_cast(const char* name_) override final {
+    std::string star_name = name_;
+    auto search_result=starring.find(star_name);
+        return (search_result!=starring.end())?true:false;
+    }
+    void get_cast_info() override final {
+        for(auto& star_:starring){
+            std::cout << star_.first << std::endl;
+            std::cout << "BIRTH\t" << star_.second.birth_date << '\n' << std::string(5,' ') << '\t' << star_.second.birth_place << std::endl;
+            std::cout << "YEARS ACTIVE\t" << star_.second.years_active << std::endl;
+        }
+    }
+    void cast_member(const char* star_name,const char* bday,const char* bplace,const char* active_years) override final {
+        starring.insert(std::pair<std::string,Cast_Info>(star_name,Cast_Info(bday,bplace,active_years)));
+    }
+public:
+    using Casts::Casts;
+    Sci_Fi():Casts(){};
+    ~Sci_Fi()=default;
+};
+
+#endif
