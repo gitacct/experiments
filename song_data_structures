@@ -1,0 +1,73 @@
+//
+//  song_data_structures.h
+//  virtual_class
+//
+//  Created by GUEST on 1/7/15.
+//  Copyright (c) 2015 GUEST. All rights reserved.
+//
+
+#ifndef virtual_class_song_data_structures_h
+#define virtual_class_song_data_structures_h
+
+struct Song_Data {
+    std::string title, group, album;
+    Song_Data(){}
+    ~Song_Data(){}
+    Song_Data(const char* _title_,const char* _group_,const char* _album_):title(_title_),group(_group_),album(_album_){}
+};
+struct Song_Info {
+    Song_Info(const char* _title_,const char* _group_,const char* _album_):data(_title_,_group_,_album_){}
+    Song_Info(){}
+    ~Song_Info(){}
+protected:
+    Song_Data data;
+};
+class Song_File:private Song_Info {
+    std::unique_ptr<std::fstream> lyrix;
+public:
+    Song_File():Song_Info(){}
+    ~Song_File(){}
+    using Song_Info::Song_Info;
+    Song_File(Song_File& copy) {
+        data = copy.get_data();
+        try {
+            lyrix = copy.get_lyric_file();
+        } catch (const char* error) {
+            std::cout << "ERROR: COULD NOT CONSTRUCT AN OBJECT FOR SONG_FILE" << std::endl;
+            std::cout << error << std::endl;
+        }
+    }
+    Song_File* operator=(Song_File cp_assgn) {
+        data = cp_assgn.get_data();
+        lyrix = std::move(cp_assgn.lyrix);
+        return this;
+    }
+    void get_lyrix() noexcept {
+        std::string file_handle = data.title + ".txt";
+        std::fstream lyric_file(file_handle,std::ios::in);
+        if (lyric_file.is_open()) {
+            std::cout << std::string(5,'+') << data.title << std::string(3,' ');
+            std::cout << "by " << data.group << " - " << data.album << std::string(5,'+') << std::endl;
+            for (std::string line; std::getline(lyric_file,line); ) {
+                std::ostringstream line_stream(std::ios::out);
+                line_stream << line;
+                std::cout << line_stream.str() << std::endl;
+            }
+        } else {
+                std::cout << "Please, check for both the spelling and the correct capitalization of the song title." << std::endl;
+        }
+    }
+    std::unique_ptr<std::fstream> get_lyric_file() {
+        std::string file_handle = data.title + ".txt";
+        std::unique_ptr<std::fstream> lyric_file(new std::fstream(file_handle,std::ios::in));
+        if (lyric_file->is_open()) {
+            lyrix = std::move(lyric_file);
+            return std::move(lyrix);
+        } else throw ("ERROR: NO SUCH SONG TITLE IN THE DIRECTORY");
+    }
+    Song_Data get_data() const noexcept {
+        return data;
+    }
+};
+
+#endif

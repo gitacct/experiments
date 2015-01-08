@@ -1,0 +1,37 @@
+//
+//  main.cpp
+//  virtual_class
+//
+//  from Friend of the Devil
+//  original by Greatful Dead
+//  cover version by Counting Crows - Films about Ghosts
+//  https://www.youtube.com/watch?v=6d2FzyM1694
+//
+//  references used
+//  en.cppreference.com
+//
+//  Created by GUEST on 1/7/15.
+//  Copyright (c) 2015 GUEST. All rights reserved.
+//
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <memory>
+#include "song_data_structures.h"
+
+int main(void) {
+    Song_File fd_cc("Friend of the Devil","Counting Crows","Films about Ghosts");
+    fd_cc.get_lyrix();
+    try {
+        auto associated_file = fd_cc.get_lyric_file();
+        std::cout << "Lyrics' file is associated with an independent pointer=> ";
+        std::cout << std::boolalpha << associated_file->is_open() << std::endl;
+    } catch (const char* error) {
+        std::cerr << error << std::endl;
+    }
+    Song_File fd_cr("Updated Lyrics","Counting Ravens","Fantasies of Ghosts");
+    fd_cc = fd_cr;
+    fd_cc.get_lyrix();
+    return 0;
+}
