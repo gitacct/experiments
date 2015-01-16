@@ -1,0 +1,37 @@
+//
+//  main.cpp
+//  2015
+//
+//  Created by GUEST on 1/16/15.
+//  Copyright (c) 2015 GUEST. All rights reserved.
+//
+
+#include <iostream>
+#include <functional>
+#include <fstream>
+#include <sstream>
+#include <map>
+#include <list>
+#include <vector>
+#include <exception>
+#include "words_functions.h"
+
+int main(int argc,char** argv) {
+    if (argc==2) {
+        std::map<std::size_t,std::string> word_hash{map_hash(argv[1])};
+        std::hash<std::string> hash_;
+    ENTRY:
+        std::cout << "Enter a word to hash " << std::flush;
+        std::string word_input;
+        std::cin >> word_input;
+        auto hash_result=word_hash.find(hash_(word_input));
+        if (hash_result!=word_hash.end()) {
+            std::cout << hash_result->first << '\t' << hash_result->second << std::endl;
+        }
+        else goto ENTRY;
+    }
+    else {
+        std::cerr << "This commandline interface will handle only one file." << std::endl;
+    }
+    return 0;
+}

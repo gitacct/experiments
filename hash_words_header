@@ -1,0 +1,40 @@
+//
+//  words_functions.h
+//  2015
+//
+//  Created by GUEST on 1/16/15.
+//  Copyright (c) 2015 GUEST. All rights reserved.
+//
+
+#ifndef _015_words_functions_h
+#define _015_words_functions_h
+
+std::vector<std::string> prep_dict(std::string file_name) {
+    std::vector<std::string> dict;
+    if (!file_name.empty()) {
+        std::string file{file_name};
+        std::fstream file_handle(file,std::ios::in);
+        std::list<std::string> words_list;
+        for(std::string word; std::getline(file_handle,word); )
+            words_list.push_back(word);
+        dict.assign(words_list.begin(), words_list.end());
+    }
+    else throw "ERROR";
+    return std::move(dict);
+}
+std::map<std::size_t,std::string> map_hash(std::string file) {
+    std::map<std::size_t,std::string> hashed_words;
+    try {
+        std::vector<std::string> dict_words{prep_dict(file)};
+        if (!dict_words.empty()) {
+            std::hash<std::string> HASH;
+            for(auto& word_:dict_words)
+                hashed_words.insert(std::pair<std::size_t,std::string>(HASH(word_),word_));
+        }
+    } catch (std::overflow_error error) {
+        std::cerr << error.what() << std::endl;
+    }
+    return std::move(hashed_words);
+}
+
+#endif
